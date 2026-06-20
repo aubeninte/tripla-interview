@@ -8,6 +8,7 @@ Before running any command, please ensure the below is installed on your machine
 * [Helm](https://helm.sh/)
 * [kubectl](https://kubernetes.io/docs/reference/kubectl/)
 * curl
+* aws cli
 
 ## Repo Structure
 
@@ -106,4 +107,44 @@ make test-backend
 make test-terraform-parse-service
 ```
 
+### Deploy outside of Local/dev
+
+If you'd like to deploy all 3 application in your own current running Kubernetes cluster, you can do so as well. The terraform parse service has been pushed to `aubenint/terraform_parse_service` so with a valid kube context, please run the following:
+
+```bash
+cd helm/
+helm template tripla-interview . | kubectl apply -f -
+```
+
 ## Terraform Deliverables
+
+The `terraform/` folder contains a small but scalable Terraform layout for provisioning the AWS infrastructure (EKS and a s3 bucket).
+
+`terraform fmt` and `terraform validate` have been run against the configuration to validate the files.
+
+```text
+terraform/
+  environments/
+    preprod/
+    prod/
+  modules/
+    eks/
+    s3/
+```
+
+Each environment is its own Terraform root module. This keeps `preprod` and `prod` state, variables, sizing, and rollout cadence isolated from each other. The environment folders call shared modules from `terraform/modules`, which keeps the resource definitions reusable while still allowing each environment to choose different values.
+
+The `eks` module provisions an EKS cluster using the community `terraform-aws-modules/eks/aws` module and a managed node group. Preprod uses the latest supported EKS version (k8s v1.36) for earlier validation, while prod intentionally uses the latest minus one version (k8s v1.35) for stability. The cluster endpoint is private by default and can be extended later with restricted public CIDR access, such as a company VPN range.
+
+The `s3` module provisions an environment-specific static assets bucket. Public access is blocked by default, and `force_destroy` is disabled for prod to reduce accidental deletion risk.
+
+For a production-ready setup, I would add a remote backend with state locking, such as S3 plus DynamoDB or Terraform Cloud, and run `terraform plan` through CI before applying changes. Example of such configuration:
+
+```terraform
+backend "s3" {
+  bucket         = "tripla-terraform-state"
+  key            = "preprod/eks/terraform.tfstate"
+  region         = "ap-northeast-1"
+  dynamodb_table = "terraform-locks"
+}
+```
