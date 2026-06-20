@@ -1,19 +1,58 @@
-replicaCount: 1
+# Usually here I would define a internal common ecr or artifactory repo where I'll store all my image for security and re-usability
 
 frontend:
+  replicaCount: 2
   image:
     repository: nginx
-    tag: latest
+    tag: "1.30.3"
   service:
     type: LoadBalancer
     port: 80
+    targetPort: 80
+    containerPort: 80
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      memory: "128Mi"
 
 backend:
+  replicaCount: 1
   image:
     repository: hashicorp/http-echo
-    tag: latest
+    tag: "1.0" # latest is over 2 years ago - Do not run in Prod because of unfixed vulnerabilities
   service:
     type: ClusterIP
     port: 8080
+    targetPort: 8080
+  extraArgs:
+    - "-listen=:8080"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      memory: "128Mi"
+  hpa:
+    enabled: false
+    maxReplica: 5
+    minReplicas: 1
+    cpuAverageUtilization: 50
 
-resources: {}
+terraform_parse:
+  replicaCount: 1
+  image:
+    repository: aubenint/terraform_parse_service
+    tag: v0.0.1
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+    limits:
+      memory: "128Mi"
+
