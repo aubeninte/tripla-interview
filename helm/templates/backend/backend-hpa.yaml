@@ -1,0 +1,21 @@
+# Only installed if hpa is enabled AND metrics server deployed to the cluster
+{{- if and .Values.backend.hpa.enabled (.Capabilities.APIVersions.Has "metrics.k8s.io/v1beta1") }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}-backend
+  minReplicas: {{ .Values.backend.hpa.minReplicas }}
+  maxReplicas: {{ .Values.backend.hpa.maxReplica }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.backend.hpa.cpuAverageUtilization }}
+{{- end }}

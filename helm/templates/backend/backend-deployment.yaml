@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-backend
+spec:
+  {{ if not .Values.backend.hpa.enabled }}
+  replicas: {{ .Values.backend.replicaCount }}
+  {{ end }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-backend
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-backend
+          image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}
+          args:
+            - "-text=hello"
+            {{- with .Values.backend.extraArgs }}
+            {{- toYaml . | trim | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}

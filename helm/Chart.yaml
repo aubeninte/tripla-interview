@@ -1,6 +1,15 @@
 apiVersion: v2
 name: tripla-apps
-description: Multi-service chart (frontend + backend) with intentional issues
+description: Multi-service chart (frontend + backend) fixed and terraform_parse_service 
 type: application
 version: 0.1.0
 appVersion: "0.1.0"
+
+maintainers:
+  - name: Tripla Interview
+    email: placeholder@tripla.com
+keywords:
+  - tripla
+  - frontend
+  - backend
+  - terraform_parser

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-terraform-parse
+spec:
+  replicas: {{ .Values.terraform_parse.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-terraform-parse
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-terraform-parse
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-terraform-parse
+          image: {{ .Values.terraform_parse.image.repository }}:{{ .Values.terraform_parse.image.tag }}
+          resources:
+            {{- toYaml .Values.terraform_parse.resources | nindent 12 }}

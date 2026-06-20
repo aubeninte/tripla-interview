@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-terraform-parse
+spec:
+  type: {{ .Values.terraform_parse.service.type }}
+  ports:
+    - port: {{ .Values.terraform_parse.service.port }}
+      targetPort: {{ .Values.terraform_parse.service.targetPort }}
+  selector:
+    app: {{ .Release.Name }}-terraform-parse
