@@ -1,5 +1,7 @@
 # Tripla Interview Deliverables
 
+**TO NOTE**: Any architectural decisions and potential improvment is being talked in [NOTES.md](./NOTES.md)
+
 ## Prerequisites
 
 Before running any command, please ensure the below is installed on your machine:
@@ -11,6 +13,36 @@ Before running any command, please ensure the below is installed on your machine
 * aws cli
 
 ## Repo Structure
+
+```text
+.
+|-- Dockerfile                         -> Container image for the Terraform parser service
+|-- Makefile                           -> Local build, test, Kind, Helm, and validation helpers
+|-- README.md                          -> Main usage guide
+|-- NOTES.md                           -> Architecture notes, tradeoffs, and possible improvements
+|-- example_outputs/                   -> Example generated Terraform files
+|   |-- tripla-bucket.tf
+|   `-- tripla-bucket-public.tf
+|-- terraform_parse_service/           -> Python Flask API that renders request payloads into .tf files
+|   |-- main.py                        -> Flask routes and file download response
+|   |-- generator.py                   -> Terraform template rendering logic
+|   |-- models.py                      -> Pydantic request validation models
+|   `-- requirements.txt               -> Python dependencies
+|-- helm/                              -> Helm chart for the local platform deployment
+|   |-- Chart.yaml
+|   |-- values.yaml
+|   `-- templates/
+|       |-- backend/                   -> Backend deployment, service, and HPA
+|       |-- frontend/                  -> Frontend deployment and service
+|       `-- terraform_parse_service/   -> Parser deployment and service
+`-- terraform/                         -> AWS infrastructure as code
+    |-- environments/
+    |   |-- preprod/                   -> Preprod Terraform root module and variables
+    |   `-- prod/                      -> Prod Terraform root module and variables
+    `-- modules/
+        |-- eks/                       -> Reusable EKS cluster module wrapper
+        `-- s3/                        -> Reusable static assets S3 bucket module
+```
 
 ## Terraform Parse Service
 
