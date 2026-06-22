@@ -139,6 +139,16 @@ make test-backend
 make test-terraform-parse-service
 ```
 
+You'll notice that the LoadBalancer service for the frontend (ngnix) stay in pending state which is expected as there no service to actual give the service an external IP. If you'd like to have a external IP in this setup I would suggest using `cloud-provider-kind`:
+
+```bash
+brew install cloud-provider-kind
+
+# In another session:
+cloud-provider-kind
+```
+
+
 ### Deploy outside of Local/dev
 
 If you'd like to deploy all 3 application in your own current running Kubernetes cluster, you can do so as well. The terraform parse service has been pushed to `aubenint/terraform_parse_service` so with a valid kube context, please run the following:
