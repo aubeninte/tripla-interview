@@ -8,6 +8,8 @@ The service exposes `POST /generate-bucket-config`. It receives the required pay
 
 The generated Terraform includes the AWS provider, `aws_s3_bucket`, and `aws_s3_bucket_acl`. For private buckets, I also added safer defaults such as ownership controls, public access blocking, server-side encryption, and versioning.
 
+As an improvment here, I could add python unit testing that could run in a CI (Github Action or gitlab...) to validate the code and integration testing could use the makefile command in a CI environment.
+
 ## Terraform
 
 The Terraform folder is structured with separate environment roots and shared modules:
