@@ -26,7 +26,7 @@ This keeps preprod and prod isolated - which was not the case with the provided 
 
 The main improvements were fixing the environment/module wiring, making prod and preprod values explicit, securing the S3 module with public access blocking, preventing accidental prod bucket deletion with `force_destroy = var.environment != "prod"`, and exposing useful EKS outputs.
 
-What could still be improved: remote state and locking (see [README.md](./README.md#terraform-deliverables)), CI-based `terraform plan`, stronger variable validation, replacing placeholder VPC/subnet IDs with a real network module, and making private/public endpoint access configurable per environment.
+What could still be improved: remote state and locking (see [README.md](./README.md#terraform-deliverables)), CI-based `terraform plan`, stronger variable validation, replacing placeholder VPC/subnet IDs with a real network module, and making private/public endpoint access configurable per environment. We can also improve by adding a kubernetes provider to do some bootstrap config on the cluster if needed (like install ArgoCD) and get a context once the cluster has been created.
 
 ## Helm
 
