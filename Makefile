@@ -16,7 +16,7 @@ FRONTEND_LOCAL_PORT ?= 8080
 BACKEND_LOCAL_PORT ?= 8082
 PARSER_LOCAL_PORT ?= 8081
 
-.PHONY: help build run test publish clean platform-setup test-all test-frontend test-backend test-terraform-parse-service
+.PHONY: help build run test unit-test publish clean platform-setup test-all test-frontend test-backend test-terraform-parse-service
 
 help: ## Show this help message
 	@echo "Usage: make [target]"
@@ -30,6 +30,9 @@ build: ## Build the Docker image
 run: ## Run the container locally
 	@echo "Starting service inside container on http://localhost:$(PORT)"
 	docker run $(RUN_FLAGS) -p $(PORT):8080 --name $(CONTAINER_NAME) $(REGISTRY)/$(IMAGE_NAME):$(TAG)
+
+unit-test: ## Run local Python unit tests via pytest
+	python3 -m pytest ./terraform_parse_service/test_main.py -v
 
 test: build ## Build, start the app locally, test it, and download the generated Terraform file
 	@set -e; \

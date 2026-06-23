@@ -51,6 +51,11 @@ The terraform parse service is written in python3 and use Flask/gunicorn to expo
 A simple local test will be as follow:
 
 ```bash
+# Unit Testing
+python3 -m pip install -r ./terraform_parse_service/requirements.txt
+make unit-test
+
+# Integration Testing
 cd ./terraform_parse_service
 python3 -m pip install -r requirements.txt
 python3 main.py

@@ -8,7 +8,7 @@ The service exposes `POST /generate-bucket-config`. It receives the required pay
 
 The generated Terraform includes the AWS provider, `aws_s3_bucket`, and `aws_s3_bucket_acl`. For private buckets, I also added safer defaults such as ownership controls, public access blocking, server-side encryption, and versioning.
 
-As an improvment here, I could add python unit testing that could run in a CI (Github Action or gitlab...) to validate the code and integration testing could use the makefile command in a CI environment.
+As an improvment here, I could add python unit testing that could run in a CI (Github Action or gitlab...) to validate the code and integration testing could use the makefile command in a CI environment. I intentionally let the unit test having a warning to prove the test can catch warnings as well as passing the 2 current unit tests.
 
 ## Terraform
 
